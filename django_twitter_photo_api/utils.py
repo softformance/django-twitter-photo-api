@@ -1,7 +1,6 @@
 import os
 import logging
 import requests
-from datetime import datetime
 import tweepy
 
 from django.core.files.base import ContentFile
@@ -95,9 +94,7 @@ def get_media_by_url(application, url):
 
 def sync_by_tag(app_id, tag, is_show, api):
     query = '%23' + tag + ' filter:media'
-    print(api)
     result_query = api.search(q=query)
-    print(result_query)
 
     if result_query:
         for media in result_query:
