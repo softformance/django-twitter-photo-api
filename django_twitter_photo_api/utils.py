@@ -49,8 +49,9 @@ def get_media_by_code(id_status, id_application):
         media_object = api.get_status(int(id_status))
         return None, media_object
     except:
-        logger.exception("Error while fetching get_media_by_code")
-        return 'Error while fetching get_media_by_code', None
+        error = "Error while fetching."
+        logger.exception(error)
+        return error, None
 
 
 def save_post(app_id, media, is_show):
@@ -78,7 +79,6 @@ def save_post(app_id, media, is_show):
         post.photo.save(os.path.basename(media_url), photo_content)
         # save tags
         app_hashtags = Hashtag.objects.filter(application_id=app_id).iterator()
-        print(app_hashtags)
         hashtags_list = [tag for tag in app_hashtags for hashtag in media.entities['hashtags'] if tag.name == hashtag['text'].lower()]
         for hashtag in hashtags_list:
             post.hashtags.add(hashtag)
@@ -88,13 +88,14 @@ def save_post(app_id, media, is_show):
 
 
 def get_media_by_url(application, url):
+    if url[-1] == '/':
+        url = url[:len(url)-1]
     id_status = int(url.split('/')[-1])
     return get_media_by_code(id_status, application.id)
 
 
 def sync_by_tag(app_id, tag, is_show, api):
     query = '%23' + tag + ' filter:media'
-    print(tag)
     result_query = api.search(q=query)
 
     if result_query:

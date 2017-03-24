@@ -25,13 +25,19 @@ class PostUrlForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(PostUrlForm, self).clean()
+        if not cleaned_data.get('application'):
+            raise forms.ValidationError("Please, select application")
+        elif not cleaned_data.get('url'):
+            raise forms.ValidationError("Please, insert URL")
         error, data = get_media_by_url(
             cleaned_data['application'], cleaned_data['url'])
 
         if error:
             raise forms.ValidationError(error)
-        if data:
+        if data and data.entities.get('media') and data.entities['media'][0]['type'] == 'photo':
             cleaned_data['data'] = data
+        else:
+            raise forms.ValidationError("Please, insert link to tweet with photo")
 
         return cleaned_data
 
@@ -51,26 +57,22 @@ class PostAdmin(admin.ModelAdmin):
         if request.POST.get('url'):
             data = form.cleaned_data
             data_twitter = data['data']
-            if data_twitter.entities.get('media'):
-                obj.media_id = data_twitter.entities.get('media')[0]['id_str']
-            else:
-                obj.media_id = ''.join(random.choice(string.digits) for _ in range(15))
-            # obj.link = data['link']
+            obj.media_id = data_twitter.entities['media'][0]['id_str']
+            obj.link = data_twitter.entities['media'][0]['url']
             obj.caption = data_twitter.text
-            # media_url = data['images']['standard_resolution']['url']
-            obj.created_at = datetime.fromtimestamp(
-                int(data['created_time']))
+            media_url = data_twitter.entities['media'][0]['media_url']
+            obj.created_at = data_twitter.created_at
             obj.username = data_twitter.user.screen_name
             # save image
             photo_content = ContentFile(requests.get(media_url).content)
             obj.photo.save(os.path.basename(media_url), photo_content)
             # save tags
-            app_tags = Tag.objects.filter(application_id=obj.application.id)
-            tags = [tag for tag in app_tags if tag.name in data['tags']]
-            for tag in tags:
-                obj.tags.add(tag)
-            if tags:
-                obj.save()
+            app_hashtags = Hashtag.objects.filter(application_id=data['application'].id).iterator()
+            hashtags_list = [tag for tag in app_hashtags for hashtag in data_twitter.entities['hashtags'] if tag.name == hashtag['text'].lower()]
+            for hashtag in hashtags_list:
+                post.hashtags.add(hashtag)
+            if hashtags_list:
+                post.save()
             return
 
         obj.save()
