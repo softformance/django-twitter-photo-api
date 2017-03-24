@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sites",
     "django_twitter_photo_api",
+    "easy_thumbnails",
 ]
 
 SITE_ID = 1

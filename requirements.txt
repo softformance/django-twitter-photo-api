@@ -1,2 +1,5 @@
-
+easy-thumbnails==2.3
+Pillow==4.0.0
+requests==2.13.0
+tweepy==3.5.0
 # Additional requirements go here

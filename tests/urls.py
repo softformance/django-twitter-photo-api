@@ -6,5 +6,5 @@ from django.conf.urls import url, include
 from django_twitter_photo_api.urls import urlpatterns as django_twitter_photo_api_urls
 
 urlpatterns = [
-    url(r'^', include(django_twitter_photo_api_urls, namespace='django_twitter_photo_api')),
+    url(r'^twitter_app', include(django_twitter_photo_api_urls, namespace='django_twitter_photo_api')),
 ]
