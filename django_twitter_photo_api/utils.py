@@ -1,12 +1,11 @@
 import os
 import logging
 import requests
+from datetime import datetime
 import tweepy
 
 from django.core.files.base import ContentFile
 from .models import Post, Hashtag
-from datetime import datetime
-from .app_settings import TW_URL, GET_MEDIAS_COUNT
 from .models import TwitterApp
 
 logger = logging.getLogger('default')
@@ -96,7 +95,9 @@ def get_media_by_url(application, url):
 
 def sync_by_tag(app_id, tag, is_show, api):
     query = '%23' + tag + ' filter:media'
+    print(api)
     result_query = api.search(q=query)
+    print(result_query)
 
     if result_query:
         for media in result_query:
@@ -106,7 +107,7 @@ def sync_by_tag(app_id, tag, is_show, api):
 def api_authed_tweepy(app_id):
     try:
         app = TwitterApp.objects.get(id=app_id)
-        is_show = app.tag_is_show
+        is_show = app.hashtag_is_show
         oauth_data = {}
         oauth_data['consumer_key'] = app.consumer_key
         oauth_data['consumer_secret'] = app.consumer_secret

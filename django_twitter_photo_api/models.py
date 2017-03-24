@@ -11,6 +11,10 @@ from easy_thumbnails.fields import ThumbnailerImageField
 
 @python_2_unicode_compatible
 class TwitterApp(models.Model):
+    TYPE_OF_SORT = (
+        ('created_at', 'DATE'),
+        ('?', 'RANDOM'),
+    )
     name = models.CharField(max_length=50, verbose_name=_('Application Name'))
     consumer_key = models.CharField(
         max_length=50, verbose_name=_('Twitter App consumer key'))
@@ -24,8 +28,11 @@ class TwitterApp(models.Model):
     access_token_secret = models.CharField(
         max_length=50, verbose_name=_('Access token secret'),
         null=True, blank=True)
-    tag_is_show = models.BooleanField(
+    hashtag_is_show = models.BooleanField(
         verbose_name=_('Show posts'), default=False)
+    hashtag_sort_by = models.CharField(
+        verbose_name=_('Type of sort'), choices=TYPE_OF_SORT, default='date', max_length=60)
+    hashtag_count = models.PositiveSmallIntegerField(default=6)
 
     class Meta:
         verbose_name = _('Twitter Application')
