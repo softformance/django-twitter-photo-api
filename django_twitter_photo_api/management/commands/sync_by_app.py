@@ -5,7 +5,7 @@ from django_twitter_photo_api.models import TwitterApp, Hashtag, Post
 from django_twitter_photo_api.utils import sync_by_tag, save_post
 
 class Command(BaseCommand):
-    help = 'Sync your app by added hashtages.'
+    help = 'Sync your app with hashtags by added list of id.'
 
     def add_arguments(self, parser):
         parser.add_argument('application_id', nargs='+', type=int)

@@ -3,25 +3,13 @@ import requests
 import tweepy 
 
 from .models import TwitterApp, Hashtag, Post
-from .utils import get_redirect_uri, sync_by_tag
+from .utils import sync_by_tag, api_authed_tweepy
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
-# from django.core import serializers
 from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger('default')
-
-
-@login_required()
-def access_token(request):
-    return NotImplementedError
-
-
-@login_required()
-def access_token_authorize(request, app_id=1):
-    return NotImplementedError
-
 
 @login_required()
 def sync_by_app(request, app_id=None):
@@ -31,31 +19,10 @@ def sync_by_app(request, app_id=None):
     if not app_id:
         return
 
-    try:
-        app = TwitterApp.objects.get(id=app_id)
-        is_show = app.hashtag_is_show
-        oauth_data = {}
-        oauth_data['consumer_key'] = app.consumer_key
-        oauth_data['consumer_secret'] = app.consumer_secret
-        oauth_data['access_token'] = app.access_token
-        oauth_data['access_token_secret'] = app.access_token_secret
-    except:
-        message = "Tried to sync undefined app"
-        logger.exception(message)
-        return []
+    app = TwitterApp.objects.get(id=app_id)
+    api = api_authed_tweepy(app_id)
 
-    try:
-        auth = tweepy.OAuthHandler(oauth_data['consumer_key'], 
-            oauth_data['consumer_secret'])
-        auth.set_access_token(oauth_data['access_token'], 
-            oauth_data['access_token_secret'])
-        api = tweepy.API(auth)
-    except:
-        message = "Cannot oauth to twitter api. Verify your data(key, token) \
-         in Django admin."
-        logger.exception(message)
-        return []
-
+    is_show = TwitterApp.objects.get(id=app_id).hashtag_is_show
     tags = Hashtag.objects.filter(application_id=app_id)
     for tag in tags:
         sync_by_tag(app_id, tag.name, is_show, api)

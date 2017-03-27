@@ -10,17 +10,6 @@ from .models import TwitterApp
 logger = logging.getLogger('default')
 
 
-def invalid_token_handler():
-    message = "Your token has expired or invalid."
-    mail_admins('Instagram Application', message, fail_silently=True)
-
-
-def get_redirect_uri(request, app_id):
-    host = request.get_host()
-    prefix = 'https' if request.is_secure() else 'http'
-    return 'null string'
-
-
 def get_medias_by_tag(tag, access_token):
     url = '%s/v1/tags/%s/media/recent?access_token=%s&count=%s' % (
         IG_URL, tag, access_token, count)

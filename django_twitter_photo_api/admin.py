@@ -135,11 +135,6 @@ class TwitterAppAdmin(admin.ModelAdmin):
     def response_change(self, request, obj):
         response = super(TwitterAppAdmin, self).response_change(request, obj)
 
-        # if obj.is_auto_access_token:
-        #     post_url = reverse('access-token-authorize',
-        #                        kwargs={'app_id': obj.id})
-        #     response['location'] = post_url
-
         return response
 
 

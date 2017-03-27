@@ -20,14 +20,10 @@ class TwitterApp(models.Model):
         max_length=50, verbose_name=_('Twitter App consumer key'))
     consumer_secret = models.CharField(
         max_length=50, verbose_name=_('Twitter App consumer secret'))
-    is_auto_access_token = models.BooleanField(
-        verbose_name=_('Get access token automatically'), default=True)
     access_token = models.CharField(
-        max_length=100, verbose_name=_('Access token'),
-        null=True, blank=True)
+        max_length=100, verbose_name=_('Access token'))
     access_token_secret = models.CharField(
-        max_length=50, verbose_name=_('Access token secret'),
-        null=True, blank=True)
+        max_length=50, verbose_name=_('Access token secret'))
     hashtag_is_show = models.BooleanField(
         verbose_name=_('Show posts'), default=False)
     hashtag_sort_by = models.CharField(
