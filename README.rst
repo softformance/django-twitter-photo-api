@@ -44,7 +44,7 @@ Add Django Twitter photostream api's URL patterns:
 
     urlpatterns = [
         ...
-        url(r'^', include(django_twitter_photo_api_urls)),
+        url(r'^twitter_app/', include(django_twitter_photo_api_urls)),
         ...
     ]
 
