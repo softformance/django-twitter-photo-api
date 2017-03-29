@@ -7,6 +7,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 
 from easy_thumbnails.fields import ThumbnailerImageField
+from django_celery_beat.models import PeriodicTask
 
 
 @python_2_unicode_compatible
@@ -36,6 +37,11 @@ class TwitterApp(models.Model):
 
     def __str__(self):
         return '%s. %s' % (self.id, self.name)
+
+
+class PeriodicTaskForeign(PeriodicTask):
+    sync_period_task = models.ForeignKey(TwitterApp, on_delete=models.SET_NULL, 
+        blank=True, null=True, related_name='periodic_task')
 
 
 @python_2_unicode_compatible

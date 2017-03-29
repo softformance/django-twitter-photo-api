@@ -12,7 +12,9 @@ from django.core.files.base import ContentFile
 from django.forms.models import ModelForm
 
 from .utils import get_media_by_url
-from .models import Post, Hashtag, TwitterApp
+from .models import Post, Hashtag, TwitterApp, PeriodicTaskForeign
+from django_celery_beat.models import PeriodicTask
+from django_celery_beat.admin import PeriodicTaskForm
 
 
 class PostUrlForm(forms.ModelForm):
@@ -128,9 +130,50 @@ class HashtagAdmin(admin.ModelAdmin):
     list_filter = ('application', 'name', )
 
 
+class PeriodicTaskInline(admin.StackedInline):
+    form = PeriodicTaskForm
+    model = PeriodicTaskForeign
+    max_num = 1
+    classes = ['collapse']    
+
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'regtask', 'task', 'enabled'),
+            'classes': ('extrapretty', 'wide'),
+        }),
+        ('Schedule', {
+            'fields': ('interval', 'crontab'),
+            'classes': ('extrapretty', 'wide'),
+        }),
+        ('Arguments', {
+            'fields': ('args', 'kwargs'),
+            'classes': ('extrapretty', 'wide'),
+        }),
+        ('Execution Options', {
+            'fields': ('expires', 'queue', 'exchange', 'routing_key'),
+            'classes': ('extrapretty', 'wide'),
+        }),
+    )
+
+
+
 class TwitterAppAdmin(admin.ModelAdmin):
 
     list_display = ('id', 'name')
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'consumer_key', 'consumer_secret', 'access_token', 'access_token_secret'),
+            'classes': ('extrapretty', 'wide'),
+        }),
+        ('Hashtag options', {
+            'fields': ('hashtag_is_show', 'hashtag_sort_by'),
+            'classes': ('extrapretty', 'wide', ),
+        }),
+    )
+
+    inlines = [
+        PeriodicTaskInline,
+    ]
 
     def response_change(self, request, obj):
         response = super(TwitterAppAdmin, self).response_change(request, obj)
