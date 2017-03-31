@@ -166,7 +166,7 @@ class TwitterAppAdmin(admin.ModelAdmin):
             'classes': ('extrapretty', 'wide'),
         }),
         ('Hashtag options', {
-            'fields': ('hashtag_is_show', 'hashtag_sort_by'),
+            'fields': ('hashtag_is_show', 'hashtag_sort_by', 'hashtag_count'),
             'classes': ('extrapretty', 'wide', ),
         }),
     )
