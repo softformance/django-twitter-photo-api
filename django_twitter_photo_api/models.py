@@ -8,6 +8,7 @@ from django.utils.translation import ugettext as _
 
 from easy_thumbnails.fields import ThumbnailerImageField
 from django_celery_beat.models import PeriodicTask
+from django.core.files.images import get_image_dimensions
 
 
 @python_2_unicode_compatible
@@ -67,7 +68,9 @@ class Hashtag(models.Model):
 class Post(models.Model):
     application = models.ForeignKey(TwitterApp, related_name='app_post')
     media_id = models.CharField(_('Media ID'), max_length=100)
-    photo = ThumbnailerImageField(upload_to='twitter_photos')
+    photo = ThumbnailerImageField(upload_to='twitter_photos', height_field='photo_height', width_field='photo_width')
+    photo_height = models.PositiveIntegerField(default=0, editable=False)
+    photo_width = models.PositiveIntegerField(default=0, editable=False)
     link = models.URLField(_('Link'))
     hashtags = models.ManyToManyField(Hashtag)
     caption = models.TextField(

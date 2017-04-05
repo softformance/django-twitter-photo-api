@@ -58,6 +58,7 @@ def get_posts(request, app_id):
     posts = Post.objects.filter(**params)\
         .filter(show=True) \
         .order_by(order_by) \
-        .values('media_id', 'photo', 'link', 'caption')[:count]
+        .values('media_id', 'photo', 'link', 'caption', 'photo_height', 
+            'photo_width')[:count]
 
     return JsonResponse(list(posts), safe=False)
