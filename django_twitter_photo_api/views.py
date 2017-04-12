@@ -61,4 +61,8 @@ def get_posts(request, app_id):
         .values('media_id', 'photo', 'link', 'caption', 'photo_height', 
             'photo_width')[:count]
 
-    return JsonResponse(list(posts), safe=False)
+    result_dict = {}
+    result_dict['from_site'] = 'twitter'
+    result_dict['photos'] = list(posts)
+
+    return JsonResponse(result_dict)
