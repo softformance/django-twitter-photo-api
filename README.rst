@@ -31,7 +31,7 @@ Add it to your `INSTALLED_APPS`:
 
     INSTALLED_APPS = (
         ...
-        'django_twitter_photo_api.apps.DjangoTwitterPhotoApiConfig',
+        'django_twitter_photo_api',
         ...
     )
 
@@ -44,7 +44,8 @@ Add Django Twitter photostream api's URL patterns:
 
     urlpatterns = [
         ...
-        url(r'^twitter_app/', include(django_twitter_photo_api_urls)),
+        url(r'^twitter_app/', include(django_twitter_photo_api_urls, 
+            namespace="twitter-feed")),
         ...
     ]
 
