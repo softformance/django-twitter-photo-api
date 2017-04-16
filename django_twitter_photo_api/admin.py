@@ -12,7 +12,7 @@ from django.core.files.base import ContentFile
 from django.forms.models import ModelForm
 
 from .utils import get_media_by_url
-from .models import Post, Hashtag, TwitterApp, PeriodicTaskForeign
+from .models import Post, Hashtag, TwitterApp, TaskSheduler
 from django_celery_beat.models import PeriodicTask
 from django_celery_beat.admin import PeriodicTaskForm
 
@@ -130,9 +130,9 @@ class HashtagAdmin(admin.ModelAdmin):
     list_filter = ('application', 'name', )
 
 
-class PeriodicTaskInline(admin.StackedInline):
+class TaskShedulerInline(admin.StackedInline):
     form = PeriodicTaskForm
-    model = PeriodicTaskForeign
+    model = TaskSheduler
     max_num = 1
     classes = ['collapse']    
 
@@ -172,7 +172,7 @@ class TwitterAppAdmin(admin.ModelAdmin):
     )
 
     inlines = [
-        PeriodicTaskInline,
+        TaskShedulerInline,
     ]
 
     def response_change(self, request, obj):

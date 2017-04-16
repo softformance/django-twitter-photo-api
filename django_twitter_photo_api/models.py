@@ -5,9 +5,11 @@ from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
+from django.db.models import signals
 
 from easy_thumbnails.fields import ThumbnailerImageField
-from django_celery_beat.models import PeriodicTask
+from django_celery_beat.models import PeriodicTask, PeriodicTasks, \
+    IntervalSchedule, CrontabSchedule, SolarSchedule
 from django.core.files.images import get_image_dimensions
 
 
@@ -40,8 +42,8 @@ class TwitterApp(models.Model):
         return '%s. %s' % (self.id, self.name)
 
 
-class PeriodicTaskForeign(PeriodicTask):
-    sync_period_task = models.ForeignKey(TwitterApp, on_delete=models.SET_NULL, 
+class TaskSheduler(PeriodicTask):
+    periodic_task = models.ForeignKey(TwitterApp, on_delete=models.SET_NULL, 
         blank=True, null=True, related_name='periodic_task')
 
 
@@ -94,3 +96,18 @@ class Post(models.Model):
             return None
 
 
+
+signals.pre_delete.connect(PeriodicTasks.changed, sender=TaskSheduler)
+signals.pre_save.connect(PeriodicTasks.changed, sender=TaskSheduler)
+signals.pre_delete.connect(
+    PeriodicTasks.update_changed, sender=IntervalSchedule)
+signals.post_save.connect(
+    PeriodicTasks.update_changed, sender=IntervalSchedule)
+signals.post_delete.connect(
+    PeriodicTasks.update_changed, sender=CrontabSchedule)
+signals.post_save.connect(
+    PeriodicTasks.update_changed, sender=CrontabSchedule)
+signals.post_delete.connect(
+    PeriodicTasks.update_changed, sender=SolarSchedule)
+signals.post_save.connect(
+    PeriodicTasks.update_changed, sender=SolarSchedule)
