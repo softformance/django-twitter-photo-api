@@ -1,15 +1,15 @@
-=============================
+===============================
 Django Twitter photostream api
-=============================
+===============================
 
 .. image:: https://badge.fury.io/py/django-twitter-photo-api.svg
     :target: https://badge.fury.io/py/django-twitter-photo-api
 
-.. image:: https://travis-ci.org/DmytroLitvinov/django-twitter-photo-api.svg?branch=master
-    :target: https://travis-ci.org/DmytroLitvinov/django-twitter-photo-api
+.. image:: https://travis-ci.org/SoftFormance/django-twitter-photo-api.svg?branch=master
+    :target: https://travis-ci.org/SoftFormance/django-twitter-photo-api
 
-.. image:: https://codecov.io/gh/DmytroLitvinov/django-twitter-photo-api/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/DmytroLitvinov/django-twitter-photo-api
+.. image:: https://codecov.io/gh/SoftFormance/django-twitter-photo-api/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/SoftFormance/django-twitter-photo-api
 
 Get photos from Twitter by hashtags
 
@@ -24,6 +24,12 @@ Quickstart
 Install Django Twitter photostream api::
 
     pip install django-twitter-photo-api
+
+Install Django Twitter photo api from GitHub::
+
+    virtualenv photostream
+    source photostream/bin/activate
+    pip install -e git+https://github.com/softformance/django-twitter-photo-api.git#egg=django-twitter-photo-api
 
 Add it to your `INSTALLED_APPS`:
 
@@ -49,10 +55,17 @@ Add Django Twitter photostream api's URL patterns:
         ...
     ]
 
+- Create at `Twitter Developer <https://dev.twitter.com/>`_ new application.
+- Add into Django admin ``Twitter applications`` model your ``consumer key``, ``consumer secret``, ``access token``, ``access token secret``.
+- Add a hashtag to your ``Hashtags`` model.
+- Sync your posts :)
+
 Features
 --------
 
-* TODO
+* Retrieve from Twitter photos by hashtag.
+* Sync added hashtags, add a post by URL and add a post manually.
+* Get photos from your backend server by simple URL.
 
 Running Tests
 -------------
