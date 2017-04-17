@@ -10,7 +10,6 @@ from django.db.models import signals
 from easy_thumbnails.fields import ThumbnailerImageField
 from django_celery_beat.models import PeriodicTask, PeriodicTasks, \
     IntervalSchedule, CrontabSchedule, SolarSchedule
-from django.core.files.images import get_image_dimensions
 
 
 @python_2_unicode_compatible
